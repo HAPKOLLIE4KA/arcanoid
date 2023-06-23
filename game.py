@@ -14,10 +14,11 @@ class Game:
         self.sound = pygame.mixer.Sound('sound/tap_key.ogg')
         self._clock = pygame.time.Clock()
         self._game_screen = GameScreen()
-        self._game_field = GameField()
-        self._constructor = Constructor(self._exit_constructor)
-        self._main_menu = MainMenu(self._exit_game, self._start_arcanoid, self._go_to_control, self._go_constructor)
-        self._control_menu = ControlMenu(self._exit_control)
+        self._game_field = GameField(self._game_screen.get_screen())
+        self._constructor = Constructor(self._game_screen.get_screen(), self._exit_constructor)
+        self._main_menu = MainMenu(self._game_screen.get_screen(), self._exit_game, self._start_arcanoid,
+                                   self._go_to_control, self._go_constructor)
+        self._control_menu = ControlMenu(self._game_screen.get_screen(), self._exit_control)
         self._pause = False
         self._running = True
         self._flag_main_menu = True
@@ -42,19 +43,19 @@ class Game:
         self._game_screen.clear_screen()
         while self._flag_main_menu:
             self._menu_event()
-            self._main_menu.draw(self._game_screen.get_screen())
+            self._main_menu.draw()
 
     def _control_game(self):
         self._game_screen.clear_screen()
         while self._flag_control_game:
             self._control_game_event()
-            self._control_menu.draw(self._game_screen.get_screen())
+            self._control_menu.draw()
 
     def _constructor_menu(self):
         self._game_screen.clear_screen()
         while self._flag_constructor:
             self._constructor_event()
-            self._constructor.draw(self._game_screen.get_screen())
+            self._constructor.draw()
 
     def _arcanoid_game(self):
         while self._flag_arcanoid_game:
@@ -73,7 +74,7 @@ class Game:
                     self._game_field.start_ball()
                     self.sound.play()
                 if event.key == pygame.K_r:
-                    self._game_field.__init__()
+                    self._game_field.__init__(self._game_screen.get_screen())
                     self.sound.play()
                 if event.key == pygame.K_ESCAPE:
                     self._restart_game()
@@ -131,12 +132,12 @@ class Game:
     def _exit_constructor(self):
         self._flag_constructor = False
         self._flag_main_menu = True
-        self._constructor.__init__(self._exit_constructor)
-        self._game_field.__init__()
+        self._constructor.__init__(self._game_screen.get_screen(), self._exit_constructor)
+        self._game_field.__init__(self._game_screen.get_screen())
 
     def _restart_game(self):
         self._flag_arcanoid_game = False
         self._flag_main_menu = True
         self._pause = False
-        self._game_field.__init__()
+        self._game_field.__init__(self._game_screen.get_screen())
         pass

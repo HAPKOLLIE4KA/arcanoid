@@ -5,6 +5,7 @@ from typing import List
 from game_elements.brick import DestructibleBrick, UnDestructibleBrick, Brick
 from game_elements.level import Level
 
+
 class Ball:
     def __init__(self):
         self.sound = pygame.mixer.Sound('sound/ball_crash.ogg')
@@ -15,7 +16,7 @@ class Ball:
         self._rect = pygame.Rect(self._x, self._y, BALL_RADIUS, BALL_RADIUS)
         self._ball_is_start = False
 
-    def check_crash_bricks(self, bricks: List[List[Brick]], level: Level, set_crash: (), add_ball: ()):
+    def check_crash_bricks(self, bricks: List[List[Brick]], level: Level, set_crash: (), add_bonus: ()):
         ball = self._test_move()
         ind = level.getInd()
         crash_rect = None
@@ -29,7 +30,7 @@ class Ball:
                         level.minus_brick()
                         level.deleteInd(i, j)
                         set_crash()
-                        if choice([True, False, False, False, False]): add_ball()
+                        if self._choice_true(): add_bonus(self._x, self._y)
             else:
                 level.deleteInd(i, j)
 
@@ -42,9 +43,12 @@ class Ball:
 
     def draw(self, surf: pygame.Surface):
         y = GAMEFIELD_HEIGHT - self._y
-        if y <= 255 and self._dy > 0: color = (255, 0, 0)
-        elif 255 < y <= 510 or y <= 255 and self._dy < 0: color = (0, 0, 255)
-        else: color = (0, 255, 0)
+        if y <= 255 and self._dy > 0:
+            color = (255, 0, 0)
+        elif 255 < y <= 510 or y <= 255 and self._dy < 0:
+            color = (0, 0, 255)
+        else:
+            color = (0, 255, 0)
         pygame.draw.circle(surf, color, (self._x, self._y), BALL_RADIUS)
 
     def _check(self, ball: pygame.Rect, rect: pygame.Rect, is_paddle: bool):
@@ -85,3 +89,7 @@ class Ball:
         self._x = paddle.centerx
         self._y = paddle.top - BALL_RADIUS
         self.start_ball()
+
+    def _choice_true(self):
+        if randint(0, 20) == 15: return True
+

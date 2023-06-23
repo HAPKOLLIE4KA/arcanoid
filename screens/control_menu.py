@@ -1,9 +1,11 @@
 import pygame
 from global_data import *
 from screens.button import Button
-class ControlMenu:
+from screens.screen import Screen
+class ControlMenu(Screen):
 
-    def __init__(self, exit_control):
+    def __init__(self, screen, exit_control):
+        Screen.__init__(self, screen)
         self._f1 = pygame.font.Font("font/Fibre.otf", 44)
 
         self._space = self._f1.render("SPACE - начать движение мяча в начале игры", False, "#D50065")
@@ -15,11 +17,11 @@ class ControlMenu:
                                    normal="#8EEB00", hover='#5C9900', pressed='#5C9900',
                                    onclickFunction=exit_control)
 
-    def draw(self, screen: pygame.Surface):
-        screen.blit(self._space, (GAMESCREEN_WIDTH // 2 - self._space.get_width() // 2, 125))
-        screen.blit(self._r, (GAMESCREEN_WIDTH // 2 - self._r.get_width() // 2, 200))
-        screen.blit(self._p, (GAMESCREEN_WIDTH // 2 - self._p.get_width() // 2, 275))
-        screen.blit(self._esc, (GAMESCREEN_WIDTH // 2 - self._esc.get_width() // 2, 350))
-        screen.blit(self._mouse, (GAMESCREEN_WIDTH // 2 - self._mouse.get_width() // 2, 425))
-        self._button_back.process(screen)
+    def draw(self):
+        self._main_screen.blit(self._space, (GAMESCREEN_WIDTH // 2 - self._space.get_width() // 2, 125))
+        self._main_screen.blit(self._r, (GAMESCREEN_WIDTH // 2 - self._r.get_width() // 2, 200))
+        self._main_screen.blit(self._p, (GAMESCREEN_WIDTH // 2 - self._p.get_width() // 2, 275))
+        self._main_screen.blit(self._esc, (GAMESCREEN_WIDTH // 2 - self._esc.get_width() // 2, 350))
+        self._main_screen.blit(self._mouse, (GAMESCREEN_WIDTH // 2 - self._mouse.get_width() // 2, 425))
+        self._button_back.process(self._main_screen)
         pygame.display.flip()

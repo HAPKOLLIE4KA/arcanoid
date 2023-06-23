@@ -3,10 +3,11 @@ import json
 from global_data import *
 from screens.button import Button
 from screens.constructor_brick import ConstructorBrick
+from screens.screen import Screen
 
-
-class Constructor:
-    def __init__(self, con_exit):
+class Constructor(Screen):
+    def __init__(self, screen, con_exit):
+        Screen.__init__(self, screen)
         self._bricks = self._init_bricks()
         self._btn = -1
         self._image = pygame.image.load("assets/gamefield.png")
@@ -73,7 +74,7 @@ class Constructor:
     def get_surface(self):
         return self._surf
 
-    def draw(self, screen: pygame.Surface):
+    def draw(self):
         self._surf.blit(self._image, (0, 0))
 
         for i in range(LEVEL_COUNT_HEIGHT):
@@ -81,12 +82,12 @@ class Constructor:
                 if self._bricks[i][j] is not None:
                     self._bricks[i][j].draw(self._surf, self._btn)
 
-        self._button_save.process(screen)
-        self._button_back.process(screen)
-        self._button_clear.process(screen)
-        self._button_fill.process(screen)
+        self._button_save.process(self._main_screen)
+        self._button_back.process(self._main_screen)
+        self._button_clear.process(self._main_screen)
+        self._button_fill.process(self._main_screen)
 
-        screen.blit(self._surf, (INDENT_SIDE, INDENT_UP))
+        self._main_screen.blit(self._surf, (INDENT_SIDE, INDENT_UP))
         pygame.display.update()
 
     def _init_bricks(self):

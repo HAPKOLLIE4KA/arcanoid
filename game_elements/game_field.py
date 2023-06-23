@@ -2,10 +2,15 @@ import pygame
 from game_elements.paddle import Paddle
 from game_elements.ball import Ball
 from game_elements.level import Level
+from game_elements.bonus import Bonus
+from screens.screen import Screen
 from global_data import *
 
-class GameField:
-    def __init__(self):
+
+class GameField(Screen):
+    def __init__(self, screen):
+        Screen.__init__(self, screen)
+        self._bonus = []
         self._paddle = Paddle()
         self._balls = [Ball()]
         self._level = Level()
@@ -25,11 +30,12 @@ class GameField:
         if not self._loos and not pause and not self._win:
             for ball in self._balls: ball.check_crash_paddle(self._paddle.get_rect())
             for ball in self._balls: ball.check_crash_bricks(self._level.get_bricks(), self._level, self._set_crash,
-                                                             self._add_ball)
+                                                             self._add_bonus)
             self._paddle.move_to_cursor()
 
             for ball in self._balls: ball.move()
             for ball in self._balls: ball.binding_to_paddle(self._paddle.get_rect())
+            for bonus in self._bonus: bonus.update(self._delete_bonus, self._paddle.get_rect(), self._add_ball)
 
     def start_ball(self):
         for ball in self._balls: ball.start_ball()
@@ -65,6 +71,7 @@ class GameField:
 
     def _draw_game(self):
         self._surf.blit(self._image, (0, 0))
+        for bonus in self._bonus: bonus.draw(self._surf)
         self._draw_game_statistics()
         self._paddle.draw(self._surf)
         for ball in self._balls:  ball.draw(self._surf)
@@ -113,3 +120,9 @@ class GameField:
         ball = Ball()
         ball.start_bonus_ball(self._paddle.get_rect())
         self._balls.append(ball)
+
+    def _add_bonus(self, x, y):
+        self._bonus += [Bonus(x, y)]
+
+    def _delete_bonus(self, bonus):
+        self._bonus.remove(bonus)
