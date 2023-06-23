@@ -1,6 +1,6 @@
 from global_data import *
 import pygame
-from random import choice, randint
+from random import choice, randint, random
 from typing import List
 from game_elements.brick import DestructibleBrick, UnDestructibleBrick, Brick
 from game_elements.level import Level
@@ -73,8 +73,8 @@ class Ball:
 
     def start_ball(self):
         if not self._ball_is_start:
-            self._dx = randint(2, 4) * choice([-1, 1])
-            self._dy = -randint(2, 4)
+            self._dx = randint(2, 4) * choice([-1, 1]) + random()
+            self._dy = -randint(2, 4) + random()
             self._ball_is_start = True
 
     def binding_to_paddle(self, paddle: pygame.Rect):
@@ -91,5 +91,5 @@ class Ball:
         self.start_ball()
 
     def _choice_true(self):
-        if randint(0, 20) == 15: return True
+        if randint(0, 10) == 5: return True
 

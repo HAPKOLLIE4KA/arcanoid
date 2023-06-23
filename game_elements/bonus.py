@@ -11,13 +11,14 @@ class Bonus:
         self._x = x
         self._y = y
         self._rect = pygame.Rect(self._x, self._y, self._width, self._height)
+        self._image = pygame.image.load("assets/bonus.png")
 
     def _move(self):
         self._y += self._speed
         self._rect = pygame.Rect(self._x, self._y, self._width, self._height)
 
     def draw(self, surf: pygame.Surface):
-        pygame.draw.rect(surf, "gray", self._rect)
+        surf.blit(self._image, (self._x, self._y))
 
     def update(self, delete, paddle: pygame.Rect, add_ball):
         if self._rect.bottom >= LOWER_LINE:
